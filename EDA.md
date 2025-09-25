@@ -179,3 +179,36 @@ El gráfico muestra la intensidad promedio de las frecuencias de la imagen. El *
 | **Líneas Axiales (Efectos de Resizing/Estructuras)** | La información estructural es importante. | **Asegurar *Data Augmentation* Simétrica:** Usar *Random Horizontal Flip* es seguro (a menos que haya objetos que cambien de significado al voltearse), y ayuda a balancear los patrones estructurales. El *Random Resized Crop* (ya recomendado) también ayudará a mitigar el efecto de los bordes. |
 
 ---
+
+
+## 7. Análisis de la Estimación de Ruido Local ($\sigma_n$)
+
+La estimación de ruido local, calculada como la **desviación estándar promedio en parches de $10 \times 10$**, es una excelente métrica para cuantificar la **granularidad o textura local** de las imágenes.
+
+### Resultados Estadísticos
+| Métrica | Valor |
+| :--- | :--- |
+| **Media ($\mu$) de $\sigma_n$** | $23.48$ |
+| **Desviación Estándar ($\sigma$) de $\sigma_n$** | $9.46$ |
+| **Imágenes con Ruido Alto** ($\sigma_n > 42.40$) | $281$ |
+
+### Interpretación del Histograma y las Estadísticas
+
+1.  **Media Alta ($23.48$):** La media es relativamente alta (en una escala de $0-255$). Esto **no necesariamente es "ruido"** en el sentido de artefactos de sensor, sino que es una medida de **alta textura y detalle local**. El valor alto confirma la interpretación del contraste general (Punto 6): las imágenes de Imagenette, en promedio, tienen **buenos bordes y patrones detallados** que el modelo puede aprender.
+2.  **Distribución Asimétrica:** La distribución está ligeramente **sesgada a la derecha**, con una cola que se extiende hasta valores altos (más allá de $60$).
+    * El grueso de las imágenes tiene baja o media textura ($\sigma_n \approx 10$ a $35$).
+    * La cola derecha representa imágenes con **textura, ruido o detalle excepcionalmente altos** (los 281 *outliers* con $\sigma_n > 42.40$).
+3.  **Contraste con FFT (Punto 7):**
+    * **FFT (Global):** Dijo que la energía se concentra en las bajas frecuencias (formas grandes).
+    * **Ruido Local (Parches):** Dice que, a nivel de parche, hay alta variación (textura).
+    * **Conclusión Combinada:** Esto sugiere que los **objetos son grandes y dominantes** (baja frecuencia), pero que la **superficie** de esos objetos (ej. la textura de la hierba, la tela, el asfalto) está bien definida y contiene **mucho detalle** (alta variación local).
+
+### Justificación de Acciones de Preprocesamiento y Modelado
+
+| Hallazgo | Conclusión | Acción Recomendada |
+| :--- | :--- | :--- |
+| **Alta Textura Promedio** ($\mu=23.48$) | El modelo aprenderá muchas características de textura. | **Mantener la robustez textural.** Es fundamental incluir *Random Resized Crop* para que el modelo no se sobreajuste a la posición exacta de estas texturas. |
+| **Outliers de Alta Textura ($281$ imágenes)** | Existe un pequeño grupo de imágenes con **muchísimo más detalle/ruido** que el promedio. | **Data Augmentation de Ruido (Esencial):** Es crítico aplicar un **Ruido Gaussiano aleatorio** con una **baja probabilidad y una desviación estándar moderada**. Esto expandirá la capacidad del modelo para generalizar desde la media ($\mu=23.48$) hacia los extremos de la cola ($\sigma_n > 40$). |
+| **Decisión de Tamaño de Filtro:** | Dado que el $\sigma_n$ es alto, los filtros de convolución más pequeños (ej. $3 \times 3$ en las capas iniciales) serán efectivos para capturar la alta granularidad. | **Arquitectura:** Favorece arquitecturas que aprovechan la información local (ej. ResNet o VGG) sobre las que se enfocan en grandes patrones espaciales. |
+
+---
