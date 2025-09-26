@@ -6,6 +6,10 @@
 
 2.  **División Train/Val:** La división entre los conjuntos de *Train* (azul) y *Val* (rosa) es **consistente** y también bien balanceada en todas las clases.
 
+<p style="text-align: center;">
+<img src="2_assets/distribucion_clases.png" alt="Distribución de Clases" width="600"/>
+</p>
+
 ### Justificación de Acciones de Preprocesamiento y Modelado
 Dado que el *dataset* es tan balanceado, la mayoría de las técnicas de mitigación de desbalance no son necesarias:
 
@@ -26,7 +30,9 @@ Dado que el *dataset* es tan balanceado, la mayoría de las técnicas de mitigac
 
 Este resultado es muy común en *datasets* que ya han sido **preprocesados** o extraídos con reglas de recorte y *resize* muy estrictas (como es el caso de Imagenette, que es un subconjunto de ImageNet, pero con un *resize* inicial a 160x160).
 
-
+<p style="text-align: center;">
+<img src="2_assets/tamaño_aspect_ratio.png" alt="Tamaño y Aspect Ratio" width="600"/>
+</p>
 
 ### Justificación de Acciones de Preprocesamiento y Modelado
 
@@ -60,6 +66,10 @@ La uniformidad elimina la necesidad de tomar decisiones complejas sobre el *resi
 3.  **Variabilidad (Desviación Estándar):** La $\sigma$ es alta (alrededor de $0.27 - 0.28$), lo que indica una **alta varianza de contraste y brillo** entre las imágenes. El canal **Azul (0.2856)** tiene la mayor varianza, lo que implica que la saturación y la distribución de azules varían más que el rojo o el verde.
 
 ---
+<p style="text-align: center;">
+<img src="2_assets/histograma_rgb.png" alt="Estadísticas de Color" width="600"/>
+</p>
+
 
 ### Análisis del Histograma de Intensidad
 
@@ -100,6 +110,10 @@ El análisis de calidad revela que la calidad del *dataset* es **excepcionalment
     * **Muy Oscuras (0.48%):** Es el tercer defecto más común.
 4.  **Problemas Múltiples (0.02%):** Es prácticamente nulo (solo 2 imágenes). Esto sugiere que la mayoría de las imágenes que fallan, lo hacen por **un solo defecto extremo** (o son imágenes tan malas que entran en la categoría de múltiples defectos, pero son muy pocas).
 
+<p style="text-align: center;">
+<img src="2_assets/imagenes_mala_calidad.png" alt="Análisis de Calidad" width="600"/>
+</p>
+
 ### Justificación de Acciones de Preprocesamiento y Limpieza
 
 | Hallazgo | Conclusión | Acción Recomendada |
@@ -115,6 +129,10 @@ El análisis de calidad revela que la calidad del *dataset* es **excepcionalment
 ### Interpretación de los Histogramas
 
 Los tres histogramas muestran distribuciones que, en general, son **similares a una campana de Gauss**, pero con variaciones que indican tendencias claras en el *dataset*.
+
+<p style="text-align: center;">
+<img src="2_assets/brillo_contraste_satu.png" alt="Distribución de Brillo, Contraste y Saturación" width="600"/>
+</p>
 
 #### 1. Distribución de Brillo (Amarillo)
 * **Forma y Pico:** La distribución está bien centrada alrededor de un valor medio de píxel de **aproximadamente $120-130$** (en una escala de $0-255$). Esto confirma la media global de $0.45-0.5$ (punto 3), indicando que las imágenes están, en promedio, **bien iluminadas** (cerca del gris medio).
@@ -150,6 +168,10 @@ El análisis de las distribuciones confirma que el *Data Augmentation* de color 
 ## 6. Análisis del Espectro de Magnitud Promedio (FFT)
 
 El gráfico muestra la intensidad promedio de las frecuencias de la imagen. El **centro** corresponde a las **bajas frecuencias** (patrones grandes, colores uniformes, formas generales), y las **esquinas/bordes** corresponden a las **altas frecuencias** (detalles finos, texturas, ruido, bordes agudos).
+
+<p style="text-align: center;">
+<img src="2_assets/fft.png" alt="Espectro de Magnitud Promedio" width="600"/>
+</p>
 
 ### Interpretación del Espectro
 
@@ -192,6 +214,10 @@ La estimación de ruido local, calculada como la **desviación estándar promedi
 | **Desviación Estándar ($\sigma$) de $\sigma_n$** | $9.46$ |
 | **Imágenes con Ruido Alto** ($\sigma_n > 42.40$) | $281$ |
 
+<p style="text-align: center;">
+<img src="2_assets/ruido_local.png" alt="Histograma de Ruido Local" width="600"/>
+</p>
+
 ### Interpretación del Histograma y las Estadísticas
 
 1.  **Media Alta ($23.48$):** La media es relativamente alta (en una escala de $0-255$). Esto **no necesariamente es "ruido"** en el sentido de artefactos de sensor, sino que es una medida de **alta textura y detalle local**. El valor alto confirma la interpretación del contraste general (Punto 6): las imágenes de Imagenette, en promedio, tienen **buenos bordes y patrones detallados** que el modelo puede aprender.
@@ -202,6 +228,10 @@ La estimación de ruido local, calculada como la **desviación estándar promedi
     * **FFT (Global):** Dijo que la energía se concentra en las bajas frecuencias (formas grandes).
     * **Ruido Local (Parches):** Dice que, a nivel de parche, hay alta variación (textura).
     * **Conclusión Combinada:** Esto sugiere que los **objetos son grandes y dominantes** (baja frecuencia), pero que la **superficie** de esos objetos (ej. la textura de la hierba, la tela, el asfalto) está bien definida y contiene **mucho detalle** (alta variación local).
+
+<p style="text-align: center;">
+<img src="2_assets/imagenes_ruido.png" alt="Ejemplo de Imágenes con Ruido Alto" width="600"/>
+</p>
 
 ### Justificación de Acciones de Preprocesamiento y Modelado
 
