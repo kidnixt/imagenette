@@ -1,6 +1,9 @@
 #no subimos el dataset lol
 data
 
+#tampoco subimos los modelos que guardo localmente
+models
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
