@@ -368,7 +368,7 @@ Tras ejecutar los sweeps de hiperparámetros, se selecciona la run con la mejor 
 **Mejora futura:**  
 - Guardar el modelo con mejores métricas (peso + configuración) como artifact de W&B para reproducibilidad y evitar reentrenamientos innecesarios.
 
-**Estado:** En progreso
+**Estado:** Listo el pollo pelada la gallina
 
 
 

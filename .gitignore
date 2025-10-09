@@ -4,6 +4,9 @@ data
 #tampoco subimos los modelos que guardo localmente
 models
 
+#no subo otras cosas
+kidnixt-ort
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
