@@ -205,12 +205,3 @@ Usa exactamente este formato (copiar y pegar por cada decisión):
 
 ---
 
-## Consejos finales
-
-* **Documenta cada paso**: los profesores valoran la justificación tanto como las métricas.
-* **Control de versiones**: guarda un commit por cada bloque grande de cambios (EDA, baseline, suite de modelos, ablation). Pegar el commit hash en `decisions.md`.
-* **Prioriza claridad** en el notebook: títulos claros, celdas pequeñas, figuras con leyendas y captions.
-* **Si algo falla**, deja la entrada en `decisions.md` con el diagnóstico (qué probaste y por qué falló). Eso suma.
-
----
-

@@ -1,5 +1,16 @@
 #no subimos el dataset lol
-data
+data_imagenette
+
+#tampoco subimos los modelos que guardo localmente
+models
+
+#no subo otras cosas
+kidnixt-ort
+
+#NO SUBO LOS MODELOS PORQUE PESAN UN HUEVO QUE RABIA
+5_final_models
+3_best_models
+4_best_models_long_training
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
